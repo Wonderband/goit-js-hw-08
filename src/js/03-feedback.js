@@ -1,8 +1,7 @@
 import throttle from 'lodash.throttle';
 
 const onInputHandle = function(event) {    
-    try {
-        console.log(event.currentTarget);
+    try {      
         if (!event.currentTarget) return;
         const { elements: {email, message}} = event.currentTarget;         
         localStorage.setItem("feedback-form-state", 
