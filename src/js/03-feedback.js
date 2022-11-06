@@ -1,11 +1,13 @@
+import throttle from 'lodash.throttle';
 
-
-const onInputHandle = function(event) {
+const onInputHandle = function(event) {    
     try {
-        const { elements: {email, message}} = event.currentTarget;  
-    localStorage.setItem("feedback-form-state", 
-    JSON.stringify({email: email.value, message: message.value}));
-    // console.log(localStorage.getItem("feedback-form-state"));
+        console.log(event.currentTarget);
+        if (!event.currentTarget) return;
+        const { elements: {email, message}} = event.currentTarget;         
+        localStorage.setItem("feedback-form-state", 
+        JSON.stringify({email: email.value, message: message.value}));     
+    
     } catch(error) {
         console.error("Get state error: ", error.message);
     }
@@ -15,11 +17,11 @@ const loadFromStorage = function(event) {
     try {
         const dataStored = JSON.parse(localStorage.getItem("feedback-form-state")) ||
         {"email": "", "message": ""};
-        emailEl.value = dataStored.email || "";
-        textAreaEl.value = dataStored.message || "";
+        emailEl.value = dataStored.email;
+        textAreaEl.value = dataStored.message;
     } catch(error) {
         console.error("Get state error: ", error.message);
-    }
+    }    
 }
 
 const totalReset = function(event) {
@@ -36,6 +38,6 @@ const textAreaEl = document.querySelector("textarea");
 
 
 window.addEventListener('DOMContentLoaded', loadFromStorage);
-formEl.addEventListener('input', onInputHandle);
+formEl.addEventListener('input', throttle(onInputHandle, 500));
 formEl.addEventListener('submit', totalReset);
 
